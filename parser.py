@@ -53,7 +53,7 @@ while True:
 	    print
      
 	# Protocolo TCP
-	if protocol == 6 :
+	if eth_protocol == 6 :
 		t = iph_length + eth_length
 		tcp_header = packet[t:t + 20]
 
@@ -82,7 +82,7 @@ while True:
 		print
      
 	# Paquetes ICMP
-	elif protocol == 1 :
+	elif eth_protocol == 1 :
 		u = iph_length + eth_length
 		icmph_length = 4
 		icmp_header = packet[u:u + 4]
@@ -104,7 +104,7 @@ while True:
 		print 'Data : ' + data
 
 	# Paquetes UDP
-	elif protocol == 17 :
+	elif eth_protocol == 17 :
 		u = iph_length + eth_length
 		udph_length = 8
 		udp_header = packet[u:u + 8]
