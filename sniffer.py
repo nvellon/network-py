@@ -5,15 +5,14 @@ from struct import *
 def eth_addr (a) :
 	b = "%.2x-%.2x-%.2x-%.2x-%.2x-%.2x" % (ord(a[0]) , ord(a[1]) , ord(a[2]), ord(a[3]),ord(a[4]) , ord(a[5]))
 	return b
-	 
-#define ETH_P_ALL    0x0003
+
 s = socket.socket( socket.AF_PACKET , socket.SOCK_RAW , socket.ntohs(0x0003))
 
-# receive a packet
+# Recibe la trama
 while True:
 	packet = s.recvfrom(65565)
 
-	# Trama
+	# Paquetes
 	packet = packet[0]
 
 	# Ancho del encabezado ethernet
