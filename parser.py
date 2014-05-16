@@ -6,13 +6,12 @@ def eth_addr (a) :
 	b = "%.2x-%.2x-%.2x-%.2x-%.2x-%.2x" % (ord(a[0]) , ord(a[1]) , ord(a[2]), ord(a[3]),ord(a[4]) , ord(a[5]))
 	return b
 
+# Abro socket local
 s = socket.socket( socket.AF_PACKET , socket.SOCK_RAW , socket.ntohs(0x0003))
 
-# Recibe la trama
+# Recibe las tramas
 while True:
 	packet = s.recvfrom(65565)
-
-	# Paquetes
 	packet = packet[0]
 
 	# Ancho del encabezado ethernet
