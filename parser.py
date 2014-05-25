@@ -1,14 +1,7 @@
 import socket
-from struct import *
-
-# Convierte una cadena de 6 caracteres a una direccion de seis hexadecimales separados por punto
-def eth_addr (a) :
-	b = "%.2x:%.2x:%.2x:%.2x:%.2x:%.2x" % (ord(a[0]), ord(a[1]), ord(a[2]), ord(a[3]), ord(a[4]), ord(a[5]))
-	return b
-
-def eth_type (a):
-	b = "0x%.2x%.2x" % (ord(a[0]), ord(a[1]))
-	return b
+import ethernet
+import ipv4
+from struct import unpack
 
 # Abro socket local
 s = socket.socket(socket.AF_PACKET, socket.SOCK_RAW, socket.ntohs(0x0003))
@@ -18,18 +11,25 @@ while True:
 	packet = s.recvfrom(65565)
 	packet = packet[0]
 
-	eth_dst_len = 6
-	eth_src_len = 6
-	eth_pro_len = 2
-	
-	eth_dst = packet[:eth_dst_len]
-	eth_src = packet[eth_dst_len:eth_dst_len + eth_src_len]
-	eth_pro = packet[eth_dst_len + eth_src_len:eth_dst_len + eth_src_len + eth_pro_len]
-	
-	print 'MAC Dst:  ' + eth_addr(eth_dst)
-	print 'MAC Src:  ' + eth_addr(eth_src)
-	print 'Eth Type: ' + eth_type(eth_pro)
+	eth_header = ethernet.parse_header(packet)
+
+	print 'ETHERNET HEADER'
+	print '  MAC Destination: ' + eth_header[0]
+	print '  MAC Source:      ' + eth_header[1]
+	print '  Protocol Type:   ' + eth_header[2]
 	print
-	print str(packet)
+
+	if ethernet.ETH_TYPE_IPV4 == eth_header[2]:
+		ip_header = ipv4.parse_header(packet)
+
+		print '  IPV4 HEADER'
+		print '    Total length:   ' + str(ip_header[4])
+		print '    Identification: ' + str(ip_header[5])
+		print '    Time to Live:   ' + str(ip_header[8])
+		print '    Protocol:       ' + str(ip_header[9])
+		print '    Source IP:      ' + ip_header[11]
+		print '    Destination IP: ' + ip_header[12]
+		print
+
 	print '====================================================================================='
 	print
